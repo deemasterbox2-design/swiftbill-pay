@@ -13,7 +13,7 @@ export const Navbar = () => {
               <Zap className="relative h-6 w-6 text-primary" fill="currentColor" />
             </div>
             <span className="text-xl font-bold bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">
-              PayBills
+              SuperBills
             </span>
           </Link>
 

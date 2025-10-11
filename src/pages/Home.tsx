@@ -60,7 +60,7 @@ const Home = () => {
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">Why Choose PayBills?</h2>
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">Why Choose SuperBills?</h2>
               <p className="text-lg text-muted-foreground">Simple, fast, and secure</p>
             </div>
 
@@ -182,7 +182,7 @@ const Home = () => {
               <div>
                 <div className="flex items-center gap-2 mb-4">
                   <Zap className="h-5 w-5 text-primary" fill="currentColor" />
-                  <span className="text-lg font-bold">PayBills</span>
+                  <span className="text-lg font-bold">SuperBills</span>
                 </div>
                 <p className="text-sm text-muted-foreground">
                   Fast, secure, and reliable bill payments for everyone.
@@ -219,7 +219,7 @@ const Home = () => {
             </div>
             
             <div className="border-t border-border mt-8 pt-8 text-center text-sm text-muted-foreground">
-              <p>&copy; {new Date().getFullYear()} PayBills. All rights reserved.</p>
+              <p>&copy; {new Date().getFullYear()} SuperBills. All rights reserved.</p>
             </div>
           </div>
         </div>
