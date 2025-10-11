@@ -32,8 +32,16 @@ const Data = () => {
 
   const loadNetworks = async () => {
     const response = await vtpassApi.getServices("data");
-    if (response.success && response.data) {
+    if (response.success && response.data && response.data.length > 0) {
       setNetworks(response.data);
+    } else {
+      // Fallback data from VTPass API
+      setNetworks([
+        { serviceID: "mtn-data", name: "MTN Data" },
+        { serviceID: "airtel-data", name: "Airtel Data" },
+        { serviceID: "glo-data", name: "Glo Data" },
+        { serviceID: "etisalat-data", name: "9mobile Data" },
+      ]);
     }
   };
 

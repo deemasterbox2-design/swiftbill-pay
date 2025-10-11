@@ -34,8 +34,22 @@ const Electricity = () => {
 
   const loadDiscos = async () => {
     const response = await vtpassApi.getServices("power");
-    if (response.success && response.data) {
+    if (response.success && response.data && response.data.length > 0) {
       setDiscos(response.data);
+    } else {
+      // Fallback data from VTPass API
+      setDiscos([
+        { serviceID: "aedc-electric", name: "Abuja Electricity (AEDC)" },
+        { serviceID: "benin-electric", name: "Benin Electricity (BEDC)" },
+        { serviceID: "eko-electric", name: "Eko Electricity (EKEDC)" },
+        { serviceID: "enugu-electric", name: "Enugu Electricity (EEDC)" },
+        { serviceID: "ibadan-electric", name: "Ibadan Electricity (IBEDC)" },
+        { serviceID: "ikeja-electric", name: "Ikeja Electricity (IKEDC)" },
+        { serviceID: "jos-electric", name: "Jos Electricity (JED)" },
+        { serviceID: "kaduna-electric", name: "Kaduna Electricity (KAEDCO)" },
+        { serviceID: "kano-electric", name: "Kano Electricity (KEDCO)" },
+        { serviceID: "portharcourt-electric", name: "Port Harcourt Electricity (PHED)" },
+      ]);
     }
   };
 

@@ -30,8 +30,16 @@ const Airtime = () => {
 
   const loadNetworks = async () => {
     const response = await vtpassApi.getServices("airtime");
-    if (response.success && response.data) {
+    if (response.success && response.data && response.data.length > 0) {
       setNetworks(response.data);
+    } else {
+      // Fallback data from VTPass API
+      setNetworks([
+        { serviceID: "mtn", name: "MTN Airtime" },
+        { serviceID: "airtel", name: "Airtel Airtime" },
+        { serviceID: "glo", name: "Glo Airtime" },
+        { serviceID: "etisalat", name: "9mobile Airtime" },
+      ]);
     }
   };
 

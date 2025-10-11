@@ -34,8 +34,16 @@ const TV = () => {
 
   const loadProviders = async () => {
     const response = await vtpassApi.getServices("tv-subscription");
-    if (response.success && response.data) {
+    if (response.success && response.data && response.data.length > 0) {
       setProviders(response.data);
+    } else {
+      // Fallback data from VTPass API
+      setProviders([
+        { serviceID: "dstv", name: "DSTV" },
+        { serviceID: "gotv", name: "GOtv" },
+        { serviceID: "startimes", name: "Startimes" },
+        { serviceID: "showmax", name: "Showmax" },
+      ]);
     }
   };
 
