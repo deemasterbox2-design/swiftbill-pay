@@ -5,8 +5,58 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Wallet as WalletIcon, Plus, TrendingUp, ArrowUpRight, ArrowDownRight } from "lucide-react";
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { walletApi } from "@/lib/api";
 
 const Wallet = () => {
+  const { toast } = useToast();
+  const [currency, setCurrency] = useState<'Naira' | 'Espees'>('Naira');
+  const [amount, setAmount] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState('card');
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleFundWallet = async () => {
+    if (!amount || parseFloat(amount) < 100) {
+      toast({
+        title: "Invalid Amount",
+        description: "Minimum amount is ₦100",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const response = await walletApi.fund({
+        currency,
+        amount: parseFloat(amount),
+        payment_method: paymentMethod,
+      });
+
+      if (response.success) {
+        toast({
+          title: "Success",
+          description: `Wallet funded with ${currency === 'Naira' ? '₦' : ''}${amount}${currency === 'Espees' ? ' ESP' : ''}`,
+        });
+        setAmount('');
+      } else {
+        toast({
+          title: "Error",
+          description: response.message || "Failed to fund wallet",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Something went wrong. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
   return (
     <div className="min-h-screen bg-gradient-hero">
       <Navbar />
@@ -62,6 +112,8 @@ const Wallet = () => {
                   <Label htmlFor="currency">Select Currency</Label>
                   <select
                     id="currency"
+                    value={currency === 'Naira' ? 'naira' : 'espees'}
+                    onChange={(e) => setCurrency(e.target.value === 'naira' ? 'Naira' : 'Espees')}
                     className="w-full h-10 px-3 rounded-md border border-input bg-background"
                   >
                     <option value="naira">Naira (₦)</option>
@@ -76,6 +128,8 @@ const Wallet = () => {
                     type="number"
                     placeholder="1000"
                     min="100"
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
                   />
                 </div>
 
@@ -83,6 +137,8 @@ const Wallet = () => {
                   <Label htmlFor="payment-method">Payment Method</Label>
                   <select
                     id="payment-method"
+                    value={paymentMethod}
+                    onChange={(e) => setPaymentMethod(e.target.value)}
                     className="w-full h-10 px-3 rounded-md border border-input bg-background"
                   >
                     <option value="card">Debit/Credit Card</option>
@@ -91,9 +147,9 @@ const Wallet = () => {
                   </select>
                 </div>
 
-                <Button className="w-full">
+                <Button className="w-full" onClick={handleFundWallet} disabled={isLoading}>
                   <Plus className="h-4 w-4 mr-2" />
-                  Fund Wallet
+                  {isLoading ? 'Processing...' : 'Fund Wallet'}
                 </Button>
               </TabsContent>
 
