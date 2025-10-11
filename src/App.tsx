@@ -9,6 +9,10 @@ import Services from "./pages/Services";
 import Auth from "./pages/Auth";
 import Wallet from "./pages/Wallet";
 import Transactions from "./pages/Transactions";
+import Airtime from "./pages/services/Airtime";
+import Data from "./pages/services/Data";
+import TV from "./pages/services/TV";
+import Electricity from "./pages/services/Electricity";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -23,6 +27,10 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/home" element={<Home />} />
           <Route path="/services" element={<Services />} />
+          <Route path="/services/airtime" element={<Airtime />} />
+          <Route path="/services/data" element={<Data />} />
+          <Route path="/services/tv" element={<TV />} />
+          <Route path="/services/electricity" element={<Electricity />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/wallet" element={<Wallet />} />
           <Route path="/transactions" element={<Transactions />} />

@@ -1,0 +1,315 @@
+import { Navbar } from "@/components/Navbar";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { Zap, Loader2, CheckCircle2 } from "lucide-react";
+import { vtpassApi } from "@/lib/api";
+import { useToast } from "@/hooks/use-toast";
+
+const Electricity = () => {
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const [step, setStep] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const [discos, setDiscos] = useState<any[]>([]);
+  const [customerName, setCustomerName] = useState("");
+  const [meterType, setMeterType] = useState("");
+  
+  const [formData, setFormData] = useState({
+    serviceID: "",
+    meterNumber: "",
+    type: "prepaid",
+    amount: "",
+    phone: "",
+    paymentMethod: "naira",
+  });
+
+  useEffect(() => {
+    loadDiscos();
+  }, []);
+
+  const loadDiscos = async () => {
+    const response = await vtpassApi.getServices("power");
+    if (response.success && response.data) {
+      setDiscos(response.data);
+    }
+  };
+
+  const verifyMeter = async () => {
+    setIsLoading(true);
+    const response = await vtpassApi.verifyCustomer({
+      serviceID: formData.serviceID,
+      billersCode: formData.meterNumber,
+      type: formData.type,
+    });
+    setIsLoading(false);
+
+    if (response.success && response.data) {
+      setCustomerName(response.data.Customer_Name || "");
+      setMeterType(response.data.Meter_Type || formData.type.toUpperCase());
+      setStep(2);
+      toast({
+        title: "Verification successful",
+        description: `Customer: ${response.data.Customer_Name}`,
+      });
+    } else {
+      toast({
+        title: "Verification failed",
+        description: response.message || "Invalid meter number",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (step === 2) {
+      setIsLoading(true);
+      const response = await vtpassApi.pay({
+        serviceID: formData.serviceID,
+        billersCode: formData.meterNumber,
+        amount: parseFloat(formData.amount),
+        phone: formData.phone,
+        paymentMethod: formData.paymentMethod as any,
+      });
+      
+      setIsLoading(false);
+      
+      if (response.success) {
+        setStep(3);
+        toast({
+          title: "Success!",
+          description: "Electricity payment successful",
+        });
+      } else {
+        toast({
+          title: "Payment failed",
+          description: response.message || "Please try again",
+          variant: "destructive",
+        });
+      }
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-hero">
+      <Navbar />
+      
+      <main className="container mx-auto px-4 py-12">
+        <div className="max-w-2xl mx-auto">
+          <div className="text-center mb-8">
+            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-yellow-500 to-orange-500 mx-auto mb-4 flex items-center justify-center">
+              <Zap className="h-8 w-8 text-white" />
+            </div>
+            <h1 className="text-3xl md:text-4xl font-bold mb-2">Electricity Bills</h1>
+            <p className="text-muted-foreground">Pay for prepaid & postpaid meters</p>
+          </div>
+
+          {step === 1 && (
+            <Card className="p-6">
+              <div className="space-y-6">
+                <div className="space-y-2">
+                  <Label htmlFor="disco">Select Disco</Label>
+                  <select
+                    id="disco"
+                    value={formData.serviceID}
+                    onChange={(e) => setFormData({ ...formData, serviceID: e.target.value })}
+                    className="w-full h-10 px-3 rounded-md border border-input bg-background"
+                    required
+                  >
+                    <option value="">Choose electricity provider...</option>
+                    {discos.map((disco) => (
+                      <option key={disco.serviceID} value={disco.serviceID}>
+                        {disco.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {formData.serviceID && (
+                  <>
+                    <div className="space-y-2">
+                      <Label>Meter Type</Label>
+                      <RadioGroup
+                        value={formData.type}
+                        onValueChange={(value) => setFormData({ ...formData, type: value })}
+                      >
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="prepaid" id="prepaid" />
+                          <Label htmlFor="prepaid" className="cursor-pointer">Prepaid</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="postpaid" id="postpaid" />
+                          <Label htmlFor="postpaid" className="cursor-pointer">Postpaid</Label>
+                        </div>
+                      </RadioGroup>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="meter">Meter Number</Label>
+                      <Input
+                        id="meter"
+                        type="text"
+                        placeholder="Enter meter number"
+                        value={formData.meterNumber}
+                        onChange={(e) => setFormData({ ...formData, meterNumber: e.target.value })}
+                        required
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="amount">Amount (₦)</Label>
+                      <Input
+                        id="amount"
+                        type="number"
+                        placeholder="1000"
+                        min="500"
+                        value={formData.amount}
+                        onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
+                        required
+                      />
+                      <p className="text-xs text-muted-foreground">Minimum: ₦500</p>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="phone">Phone Number</Label>
+                      <Input
+                        id="phone"
+                        type="tel"
+                        placeholder="08012345678"
+                        value={formData.phone}
+                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                        pattern="0[789]\d{9}"
+                        required
+                      />
+                    </div>
+                  </>
+                )}
+
+                <Button
+                  onClick={verifyMeter}
+                  className="w-full"
+                  size="lg"
+                  disabled={!formData.meterNumber || !formData.amount || isLoading}
+                >
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Verifying...
+                    </>
+                  ) : (
+                    "Verify & Continue"
+                  )}
+                </Button>
+              </div>
+            </Card>
+          )}
+
+          {step === 2 && (
+            <Card className="p-6">
+              <div className="mb-6">
+                <h2 className="text-xl font-semibold mb-4">Confirm Payment</h2>
+                <div className="space-y-3 bg-muted/50 p-4 rounded-lg">
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Disco:</span>
+                    <span className="font-medium">
+                      {discos.find(d => d.serviceID === formData.serviceID)?.name}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Customer:</span>
+                    <span className="font-medium">{customerName}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Meter Number:</span>
+                    <span className="font-medium">{formData.meterNumber}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Meter Type:</span>
+                    <span className="font-medium">{meterType}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Amount:</span>
+                    <span className="font-bold text-primary">₦{formData.amount}</span>
+                  </div>
+                </div>
+              </div>
+
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="space-y-3">
+                  <Label>Payment Method</Label>
+                  <RadioGroup
+                    value={formData.paymentMethod}
+                    onValueChange={(value) => setFormData({ ...formData, paymentMethod: value })}
+                  >
+                    <div className="flex items-center space-x-2 border rounded-lg p-4 cursor-pointer hover:bg-muted/50">
+                      <RadioGroupItem value="naira" id="naira" />
+                      <Label htmlFor="naira" className="flex-1 cursor-pointer">Pay with Naira</Label>
+                    </div>
+                    <div className="flex items-center space-x-2 border rounded-lg p-4 cursor-pointer hover:bg-muted/50">
+                      <RadioGroupItem value="espees" id="espees" />
+                      <Label htmlFor="espees" className="flex-1 cursor-pointer">Pay with Espees</Label>
+                    </div>
+                    <div className="flex items-center space-x-2 border rounded-lg p-4 cursor-pointer hover:bg-muted/50">
+                      <RadioGroupItem value="wallet" id="wallet" />
+                      <Label htmlFor="wallet" className="flex-1 cursor-pointer">Pay from Wallet</Label>
+                    </div>
+                  </RadioGroup>
+                </div>
+
+                <div className="flex gap-3">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="flex-1"
+                    onClick={() => setStep(1)}
+                    disabled={isLoading}
+                  >
+                    Back
+                  </Button>
+                  <Button type="submit" className="flex-1" disabled={isLoading}>
+                    {isLoading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Processing...
+                      </>
+                    ) : (
+                      "Complete Payment"
+                    )}
+                  </Button>
+                </div>
+              </form>
+            </Card>
+          )}
+
+          {step === 3 && (
+            <Card className="p-8 text-center">
+              <div className="w-16 h-16 rounded-full bg-green-500/10 mx-auto mb-4 flex items-center justify-center">
+                <CheckCircle2 className="h-8 w-8 text-green-500" />
+              </div>
+              <h2 className="text-2xl font-bold mb-2">Payment Successful!</h2>
+              <p className="text-muted-foreground mb-6">
+                ₦{formData.amount} has been credited to meter {formData.meterNumber}
+              </p>
+              <div className="flex gap-3">
+                <Button variant="outline" className="flex-1" onClick={() => navigate("/transactions")}>
+                  View History
+                </Button>
+                <Button className="flex-1" onClick={() => window.location.reload()}>
+                  Pay Again
+                </Button>
+              </div>
+            </Card>
+          )}
+        </div>
+      </main>
+    </div>
+  );
+};
+
+export default Electricity;
