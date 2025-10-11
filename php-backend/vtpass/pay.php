@@ -29,6 +29,7 @@ $variationCode = sanitizeInput($input['variation_code'] ?? '');
 $amount = floatval($input['amount'] ?? 0);
 $phone = sanitizeInput($input['phone'] ?? '');
 $paymentMethod = sanitizeInput($input['paymentMethod'] ?? 'naira');
+$walletCurrency = sanitizeInput($input['walletCurrency'] ?? 'Naira');
 
 // Validation
 if (empty($serviceID) || empty($billersCode) || empty($phone)) {
@@ -44,12 +45,14 @@ $db = Database::getInstance()->getConnection();
 $userId = getCurrentUserId();
 
 if ($paymentMethod === 'wallet' && $userId) {
-    $stmt = $db->prepare("SELECT balance FROM wallets WHERE user_id = ? AND currency = 'Naira'");
+    // Check the appropriate wallet based on currency selection
+    $walletColumn = $walletCurrency === 'Espees' ? 'espees_balance' : 'naira_balance';
+    $stmt = $db->prepare("SELECT $walletColumn as balance FROM wallets WHERE user_id = ?");
     $stmt->execute([$userId]);
     $wallet = $stmt->fetch();
     
     if (!$wallet || $wallet['balance'] < $amount) {
-        sendJsonResponse(['success' => false, 'message' => 'Insufficient wallet balance'], 400);
+        sendJsonResponse(['success' => false, 'message' => "Insufficient $walletCurrency wallet balance"], 400);
     }
 }
 
@@ -92,7 +95,7 @@ $transactionData = [
     'service_id' => $serviceID,
     'biller_code' => $billersCode,
     'amount' => $amount,
-    'currency' => $paymentMethod === 'espees' ? 'Espees' : 'Naira',
+    'currency' => $paymentMethod === 'wallet' ? $walletCurrency : ($paymentMethod === 'espees' ? 'Espees' : 'Naira'),
     'status' => $response['code'] ?? 'failed',
     'response' => $response
 ];
@@ -101,7 +104,8 @@ logTransaction($db, $transactionData);
 
 // Deduct from wallet if successful
 if (isset($response['code']) && $response['code'] === '000' && $paymentMethod === 'wallet' && $userId) {
-    $stmt = $db->prepare("UPDATE wallets SET balance = balance - ?, updated_at = NOW() WHERE user_id = ? AND currency = 'Naira'");
+    $walletColumn = $walletCurrency === 'Espees' ? 'espees_balance' : 'naira_balance';
+    $stmt = $db->prepare("UPDATE wallets SET $walletColumn = $walletColumn - ?, updated_at = NOW() WHERE user_id = ?");
     $stmt->execute([$amount, $userId]);
 }
 

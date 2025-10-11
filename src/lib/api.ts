@@ -63,6 +63,7 @@ export const vtpassApi = {
     amount: number;
     phone: string;
     paymentMethod: 'naira' | 'espees' | 'wallet';
+    walletCurrency?: 'Naira' | 'Espees';
   }) => apiCall('/vtpass/pay.php', 'POST', data),
   
   requery: (requestId: string) =>

@@ -26,6 +26,7 @@ const Electricity = () => {
     amount: "",
     phone: "",
     paymentMethod: "naira",
+    walletCurrency: "Naira" as "Naira" | "Espees",
   });
 
   useEffect(() => {
@@ -90,6 +91,7 @@ const Electricity = () => {
         amount: parseFloat(formData.amount),
         phone: formData.phone,
         paymentMethod: formData.paymentMethod as any,
+        walletCurrency: formData.paymentMethod === 'wallet' ? formData.walletCurrency : undefined,
       });
       
       setIsLoading(false);
@@ -275,6 +277,29 @@ const Electricity = () => {
                     </div>
                   </RadioGroup>
                 </div>
+
+                {formData.paymentMethod === 'wallet' && (
+                  <div className="space-y-3">
+                    <Label>Select Wallet Currency</Label>
+                    <RadioGroup
+                      value={formData.walletCurrency}
+                      onValueChange={(value: "Naira" | "Espees") => setFormData({ ...formData, walletCurrency: value })}
+                    >
+                      <div className="flex items-center space-x-2 border rounded-lg p-4 cursor-pointer hover:bg-muted/50">
+                        <RadioGroupItem value="Naira" id="wallet-naira" />
+                        <Label htmlFor="wallet-naira" className="flex-1 cursor-pointer">
+                          Naira Wallet
+                        </Label>
+                      </div>
+                      <div className="flex items-center space-x-2 border rounded-lg p-4 cursor-pointer hover:bg-muted/50">
+                        <RadioGroupItem value="Espees" id="wallet-espees" />
+                        <Label htmlFor="wallet-espees" className="flex-1 cursor-pointer">
+                          Espees Wallet
+                        </Label>
+                      </div>
+                    </RadioGroup>
+                  </div>
+                )}
 
                 <div className="flex gap-3">
                   <Button
