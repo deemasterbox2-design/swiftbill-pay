@@ -5,9 +5,11 @@
  * Body: {
  *   "serviceID": "string",
  *   "billersCode": "string",
- *   "variation_code": "string" (optional),
+ *   "variation_code": "string" (optional, required for "change" subscription_type),
  *   "amount": number,
  *   "phone": "string",
+ *   "subscription_type": "renew|change" (optional, for TV subscriptions),
+ *   "quantity": number (optional, for TV subscriptions - number of months),
  *   "paymentMethod": "naira|espees|wallet"
  * }
  */
@@ -28,6 +30,8 @@ $billersCode = sanitizeInput($input['billersCode'] ?? '');
 $variationCode = sanitizeInput($input['variation_code'] ?? '');
 $amount = floatval($input['amount'] ?? 0);
 $phone = sanitizeInput($input['phone'] ?? '');
+$subscriptionType = sanitizeInput($input['subscription_type'] ?? '');
+$quantity = intval($input['quantity'] ?? 1);
 $paymentMethod = sanitizeInput($input['paymentMethod'] ?? 'naira');
 $walletCurrency = sanitizeInput($input['walletCurrency'] ?? 'Naira');
 
@@ -73,8 +77,19 @@ $paymentData = [
     'phone' => $phone
 ];
 
+// Add subscription_type for TV subscriptions (DSTV, GOtv, Startimes)
+if (!empty($subscriptionType)) {
+    $paymentData['subscription_type'] = $subscriptionType;
+}
+
+// Add variation_code for "change" subscription or non-TV services
 if (!empty($variationCode)) {
     $paymentData['variation_code'] = $variationCode;
+}
+
+// Add quantity for TV subscriptions (number of months)
+if ($quantity > 1 && !empty($subscriptionType)) {
+    $paymentData['quantity'] = $quantity;
 }
 
 if ($amount > 0) {
