@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Wallet as WalletIcon, Plus, TrendingUp, ArrowUpRight, ArrowDownRight } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { walletApi } from "@/lib/api";
 
@@ -15,6 +15,22 @@ const Wallet = () => {
   const [amount, setAmount] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('card');
   const [isLoading, setIsLoading] = useState(false);
+  const [balances, setBalances] = useState({ naira_balance: 0, espees_balance: 0 });
+
+  useEffect(() => {
+    fetchBalances();
+  }, []);
+
+  const fetchBalances = async () => {
+    try {
+      const response = await walletApi.getBalance();
+      if (response.success && response.data) {
+        setBalances(response.data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch balances:', error);
+    }
+  };
 
   const handleFundWallet = async () => {
     if (!amount || parseFloat(amount) < 100) {
@@ -77,7 +93,7 @@ const Wallet = () => {
                 </div>
                 <TrendingUp className="h-4 w-4 opacity-90" />
               </div>
-              <div className="text-3xl font-bold mb-4">₦0.00</div>
+              <div className="text-3xl font-bold mb-4">₦{balances.naira_balance.toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
               <Button variant="secondary" size="sm" className="w-full">
                 <Plus className="h-4 w-4 mr-2" />
                 Fund Wallet
@@ -92,7 +108,7 @@ const Wallet = () => {
                 </div>
                 <TrendingUp className="h-4 w-4 opacity-90" />
               </div>
-              <div className="text-3xl font-bold mb-4">0.00 ESP</div>
+              <div className="text-3xl font-bold mb-4">{balances.espees_balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ESP</div>
               <Button variant="secondary" size="sm" className="w-full">
                 <Plus className="h-4 w-4 mr-2" />
                 Fund Wallet

@@ -9,6 +9,7 @@ import Services from "./pages/Services";
 import Auth from "./pages/Auth";
 import Wallet from "./pages/Wallet";
 import Transactions from "./pages/Transactions";
+import PaymentConfirm from "./pages/PaymentConfirm";
 import Airtime from "./pages/services/Airtime";
 import Data from "./pages/services/Data";
 import TV from "./pages/services/TV";
@@ -34,6 +35,7 @@ const App = () => (
           <Route path="/auth" element={<Auth />} />
           <Route path="/wallet" element={<Wallet />} />
           <Route path="/transactions" element={<Transactions />} />
+          <Route path="/payment/confirm" element={<PaymentConfirm />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

@@ -92,5 +92,42 @@ export const transactionApi = {
   getHistory: (filters?: { status?: string; dateRange?: string }) =>
     apiCall('/transactions/history.php' + (filters ? `?${new URLSearchParams(filters as any)}` : '')),
   
+  getDetails: (requestId: string) =>
+    apiCall(`/transactions/details.php?request_id=${requestId}`),
+  
+  downloadReceipt: (requestId: string) =>
+    apiCall(`/transactions/receipt.php?request_id=${requestId}`),
+  
   exportCSV: () => apiCall('/transactions/export.php'),
+};
+
+// User API functions
+export const userApi = {
+  getSuggestions: (type: 'phone' | 'email' | 'meter' | 'smartcard' | 'decoder') =>
+    apiCall(`/user/suggestions.php?type=${type}`),
+};
+
+// Payment Gateway API functions
+export const paymentApi = {
+  initializeMonnify: (data: { amount: number; email: string; name: string; reference: string }) =>
+    apiCall('/payment/monnify.php', 'POST', data),
+  
+  initializeFlutterwave: (data: { amount: number; email: string; name: string; reference: string }) =>
+    apiCall('/payment/flutterwave.php', 'POST', data),
+  
+  initializePaystack: (data: { amount: number; email: string; reference: string }) =>
+    apiCall('/payment/paystack.php', 'POST', data),
+};
+
+// Email API functions
+export const emailApi = {
+  sendToken: (data: {
+    recipient_email: string;
+    recipient_name: string;
+    meter_number: string;
+    token: string;
+    amount: number;
+    disco: string;
+    transaction_id: string;
+  }) => apiCall('/email/send-token.php', 'POST', data),
 };
