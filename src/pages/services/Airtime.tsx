@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { Smartphone, Loader2, CheckCircle2, XCircle } from "lucide-react";
 import { vtpassApi } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
+import { WalletBalances } from "@/components/WalletBalances";
 
 const Airtime = () => {
   const navigate = useNavigate();
@@ -101,6 +102,8 @@ const Airtime = () => {
             <h1 className="text-3xl md:text-4xl font-bold mb-2">Airtime Recharge</h1>
             <p className="text-muted-foreground">Instant airtime for all networks</p>
           </div>
+
+          <WalletBalances />
 
           {step === 1 && (
             <Card className="p-6">

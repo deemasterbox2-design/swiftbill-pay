@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { Tv as TvIcon, Loader2, CheckCircle2 } from "lucide-react";
 import { vtpassApi } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
+import { WalletBalances } from "@/components/WalletBalances";
 
 const TV = () => {
   const navigate = useNavigate();
@@ -144,6 +145,8 @@ const TV = () => {
             <h1 className="text-3xl md:text-4xl font-bold mb-2">TV Subscription</h1>
             <p className="text-muted-foreground">DSTV, GOtv, Startimes & more</p>
           </div>
+
+          <WalletBalances />
 
           {step === 1 && (
             <Card className="p-6">

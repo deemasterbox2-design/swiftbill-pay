@@ -6,8 +6,8 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Zap, Loader2, CheckCircle2 } from "lucide-react";
-import { vtpassApi } from "@/lib/api";
+import { Zap, Loader2, CheckCircle2, Wallet as WalletIcon } from "lucide-react";
+import { vtpassApi, walletApi, emailApi } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
 
 const Electricity = () => {
@@ -18,6 +18,7 @@ const Electricity = () => {
   const [discos, setDiscos] = useState<any[]>([]);
   const [customerName, setCustomerName] = useState("");
   const [meterType, setMeterType] = useState("");
+  const [walletBalances, setWalletBalances] = useState({ naira_balance: 0, espees_balance: 0 });
   
   const [formData, setFormData] = useState({
     serviceID: "",
@@ -25,13 +26,22 @@ const Electricity = () => {
     type: "prepaid",
     amount: "",
     phone: "",
+    recipientEmail: "",
     paymentMethod: "naira",
     walletCurrency: "Naira" as "Naira" | "Espees",
   });
 
   useEffect(() => {
     loadDiscos();
+    loadWalletBalances();
   }, []);
+
+  const loadWalletBalances = async () => {
+    const response = await walletApi.getBalance();
+    if (response.success && response.data) {
+      setWalletBalances(response.data);
+    }
+  };
 
   const loadDiscos = async () => {
     const response = await vtpassApi.getServices("power");
@@ -97,6 +107,19 @@ const Electricity = () => {
       setIsLoading(false);
       
       if (response.success) {
+        // Send token email if available
+        if (response.data?.token && formData.recipientEmail) {
+          await emailApi.sendToken({
+            recipient_email: formData.recipientEmail,
+            recipient_name: customerName,
+            meter_number: formData.meterNumber,
+            token: response.data.token,
+            amount: parseFloat(formData.amount),
+            disco: discos.find(d => d.serviceID === formData.serviceID)?.name || '',
+            transaction_id: response.data.request_id || '',
+          });
+        }
+        
         setStep(3);
         toast({
           title: "Success!",
@@ -124,6 +147,32 @@ const Electricity = () => {
             </div>
             <h1 className="text-3xl md:text-4xl font-bold mb-2">Electricity Bills</h1>
             <p className="text-muted-foreground">Pay for prepaid & postpaid meters</p>
+          </div>
+
+          {/* Wallet Balances */}
+          <div className="grid grid-cols-2 gap-4 mb-6">
+            <Card className="p-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-green-500/10 flex items-center justify-center">
+                  <WalletIcon className="h-5 w-5 text-green-500" />
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground">Naira Wallet</p>
+                  <p className="text-lg font-bold">₦{walletBalances.naira_balance.toLocaleString()}</p>
+                </div>
+              </div>
+            </Card>
+            <Card className="p-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-purple-500/10 flex items-center justify-center">
+                  <WalletIcon className="h-5 w-5 text-purple-500" />
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground">Espees Wallet</p>
+                  <p className="text-lg font-bold">€{walletBalances.espees_balance.toLocaleString()}</p>
+                </div>
+              </div>
+            </Card>
           </div>
 
           {step === 1 && (
@@ -203,6 +252,19 @@ const Electricity = () => {
                         pattern="0[789]\d{9}"
                         required
                       />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="recipientEmail">Recipient Email (for token delivery)</Label>
+                      <Input
+                        id="recipientEmail"
+                        type="email"
+                        placeholder="email@example.com"
+                        value={formData.recipientEmail}
+                        onChange={(e) => setFormData({ ...formData, recipientEmail: e.target.value })}
+                        required
+                      />
+                      <p className="text-xs text-muted-foreground">Token will be sent to this email</p>
                     </div>
                   </>
                 )}
@@ -286,15 +348,15 @@ const Electricity = () => {
                       onValueChange={(value: "Naira" | "Espees") => setFormData({ ...formData, walletCurrency: value })}
                     >
                       <div className="flex items-center space-x-2 border rounded-lg p-4 cursor-pointer hover:bg-muted/50">
-                        <RadioGroupItem value="Naira" id="wallet-naira" />
+                      <RadioGroupItem value="Naira" id="wallet-naira" />
                         <Label htmlFor="wallet-naira" className="flex-1 cursor-pointer">
-                          Naira Wallet
+                          Naira Wallet (₦{walletBalances.naira_balance.toLocaleString()})
                         </Label>
                       </div>
                       <div className="flex items-center space-x-2 border rounded-lg p-4 cursor-pointer hover:bg-muted/50">
-                        <RadioGroupItem value="Espees" id="wallet-espees" />
+                      <RadioGroupItem value="Espees" id="wallet-espees" />
                         <Label htmlFor="wallet-espees" className="flex-1 cursor-pointer">
-                          Espees Wallet
+                          Espees Wallet (€{walletBalances.espees_balance.toLocaleString()})
                         </Label>
                       </div>
                     </RadioGroup>

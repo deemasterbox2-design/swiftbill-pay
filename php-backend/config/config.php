@@ -22,8 +22,8 @@ define('ESPEES_PAYMENT_URL', 'https://payment.espees.org/pay');
 define('ESPEES_MERCHANT_WALLET', '0xf7c609f4a25244f7847cb4f7049e88e89424de8d');
 
 // App Configuration
-define('APP_URL', 'http://localhost:5173'); // Your React app URL
-define('API_URL', 'http://localhost/superbills-api'); // This API URL
+define('APP_URL', 'https://superbills.lovable.app'); // Your React app URL
+define('API_URL', 'https://smcgame.com/api'); // This API URL
 define('TIMEZONE', 'Africa/Lagos');
 
 // Session Configuration

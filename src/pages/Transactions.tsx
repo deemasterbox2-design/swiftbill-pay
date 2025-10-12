@@ -10,43 +10,50 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Download, Search, Filter, CheckCircle2, XCircle, Clock } from "lucide-react";
+import { Download, Search, Filter, CheckCircle2, XCircle, Clock, Loader2 } from "lucide-react";
+import { transactionApi } from "@/lib/api";
+import { useState, useEffect } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 const Transactions = () => {
-  const transactions = [
-    {
-      id: "TXN001",
-      service: "MTN Airtime",
-      amount: 500,
-      status: "success",
-      date: "2025-01-10 14:30",
-      phone: "08012345678",
-    },
-    {
-      id: "TXN002",
-      service: "DSTV Subscription",
-      amount: 5000,
-      status: "success",
-      date: "2025-01-09 10:15",
-      smartcard: "1234567890",
-    },
-    {
-      id: "TXN003",
-      service: "Airtel Data Bundle",
-      amount: 1000,
-      status: "pending",
-      date: "2025-01-08 16:45",
-      phone: "08098765432",
-    },
-    {
-      id: "TXN004",
-      service: "EKEDC Electricity",
-      amount: 3000,
-      status: "failed",
-      date: "2025-01-07 09:20",
-      meter: "12345678901",
-    },
-  ];
+  const { toast } = useToast();
+  const [transactions, setTransactions] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [dateFilter, setDateFilter] = useState("7days");
+
+  useEffect(() => {
+    loadTransactions();
+  }, [statusFilter, dateFilter]);
+
+  const loadTransactions = async () => {
+    setIsLoading(true);
+    const response = await transactionApi.getHistory({
+      status: statusFilter !== "all" ? statusFilter : undefined,
+      dateRange: dateFilter,
+    });
+    setIsLoading(false);
+
+    if (response.success && response.data) {
+      setTransactions(response.data);
+    } else {
+      toast({
+        title: "Failed to load transactions",
+        description: response.message || "Please try again",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleExportCSV = async () => {
+    const response = await transactionApi.exportCSV();
+    if (response.success) {
+      toast({
+        title: "Export successful",
+        description: "Your CSV file has been downloaded",
+      });
+    }
+  };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -85,7 +92,7 @@ const Transactions = () => {
               <h1 className="text-3xl md:text-4xl font-bold mb-2">Transaction History</h1>
               <p className="text-muted-foreground">View and export your payment history</p>
             </div>
-            <Button className="mt-4 md:mt-0">
+            <Button className="mt-4 md:mt-0" onClick={handleExportCSV}>
               <Download className="h-4 w-4 mr-2" />
               Export CSV
             </Button>
@@ -102,7 +109,7 @@ const Transactions = () => {
                   />
                 </div>
               </div>
-              <Select defaultValue="all">
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
                 <SelectTrigger>
                   <SelectValue placeholder="Status" />
                 </SelectTrigger>
@@ -113,7 +120,7 @@ const Transactions = () => {
                   <SelectItem value="failed">Failed</SelectItem>
                 </SelectContent>
               </Select>
-              <Select defaultValue="7days">
+              <Select value={dateFilter} onValueChange={setDateFilter}>
                 <SelectTrigger>
                   <SelectValue placeholder="Date Range" />
                 </SelectTrigger>
@@ -127,8 +134,14 @@ const Transactions = () => {
             </div>
           </Card>
 
-          <div className="space-y-4">
-            {transactions.map((txn) => (
+          {isLoading ? (
+            <Card className="p-12 text-center">
+              <Loader2 className="h-8 w-8 animate-spin mx-auto text-primary" />
+              <p className="mt-4 text-muted-foreground">Loading transactions...</p>
+            </Card>
+          ) : (
+            <div className="space-y-4">
+              {transactions.map((txn) => (
               <Card key={txn.id} className="p-6 hover:shadow-medium transition-smooth">
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                   <div className="flex items-start gap-4">
@@ -161,8 +174,9 @@ const Transactions = () => {
                   </div>
                 </div>
               </Card>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
 
           {transactions.length === 0 && (
             <Card className="p-12 text-center">

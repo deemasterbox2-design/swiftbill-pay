@@ -2,7 +2,7 @@
  * API utility functions for connecting to PHP backend
  */
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://superbills.org/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://smcgame.com/api';
 
 interface ApiResponse<T = any> {
   success: boolean;

@@ -107,6 +107,31 @@ if (isset($response['code']) && $response['code'] === '000' && $paymentMethod ==
     $walletColumn = $walletCurrency === 'Espees' ? 'espees_balance' : 'naira_balance';
     $stmt = $db->prepare("UPDATE wallets SET $walletColumn = $walletColumn - ?, updated_at = NOW() WHERE user_id = ?");
     $stmt->execute([$amount, $userId]);
+    
+    // Track user details for suggestions
+    if ($userId) {
+        // Track phone number
+        $stmt = $db->prepare("
+            INSERT INTO user_details_suggestions (user_id, detail_type, detail_value, usage_count, last_used_at)
+            VALUES (?, 'phone', ?, 1, NOW())
+            ON DUPLICATE KEY UPDATE usage_count = usage_count + 1, last_used_at = NOW()
+        ");
+        $stmt->execute([$userId, $phone]);
+        
+        // Track meter/smartcard if available
+        $detailType = strpos($serviceID, 'electric') !== false ? 'meter' : 
+                     (strpos($serviceID, 'dstv') !== false || strpos($serviceID, 'gotv') !== false ? 'smartcard' : 
+                     (strpos($serviceID, 'startimes') !== false ? 'decoder' : null));
+        
+        if ($detailType) {
+            $stmt = $db->prepare("
+                INSERT INTO user_details_suggestions (user_id, detail_type, detail_value, usage_count, last_used_at)
+                VALUES (?, ?, ?, 1, NOW())
+                ON DUPLICATE KEY UPDATE usage_count = usage_count + 1, last_used_at = NOW()
+            ");
+            $stmt->execute([$userId, $detailType, $billersCode]);
+        }
+    }
 }
 
 if (isset($response['code']) && ($response['code'] === '000' || $response['code'] === '002')) {

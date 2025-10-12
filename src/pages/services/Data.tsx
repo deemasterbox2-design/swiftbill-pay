@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { Wifi, Loader2, CheckCircle2 } from "lucide-react";
 import { vtpassApi } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
+import { WalletBalances } from "@/components/WalletBalances";
 
 const Data = () => {
   const navigate = useNavigate();
@@ -128,6 +129,8 @@ const Data = () => {
             <h1 className="text-3xl md:text-4xl font-bold mb-2">Data Bundles</h1>
             <p className="text-muted-foreground">Affordable data plans for all networks</p>
           </div>
+
+          <WalletBalances />
 
           {step === 1 && (
             <Card className="p-6">
