@@ -7,9 +7,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mail } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 const Auth = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -33,7 +35,10 @@ const Auth = () => {
   };
 
   const handleGoogleLogin = () => {
-    alert("Google OAuth integration is coming soon! For now, please use email/password authentication.");
+    toast({
+      title: "Coming Soon",
+      description: "Google authentication will be available soon. Please use email/password for now.",
+    });
   };
 
   return (

@@ -7,7 +7,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Smartphone, Loader2, CheckCircle2, XCircle } from "lucide-react";
-import { vtpassApi } from "@/lib/api";
+import { vtpassApi, paymentApi } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
 import { WalletBalances } from "@/components/WalletBalances";
 
@@ -62,6 +62,48 @@ const Airtime = () => {
     } else if (step === 2) {
       // Process payment
       setIsLoading(true);
+      
+      // If paying with Naira, redirect to Flutterwave
+      if (formData.paymentMethod === 'naira') {
+        try {
+          const response = await paymentApi.initializeFlutterwave({
+            amount: parseFloat(formData.amount),
+            email: 'customer@superbills.org',
+            name: 'SuperBills Customer',
+            phone: formData.phone
+          });
+
+          if (response.success && response.data?.payment_url) {
+            toast({
+              title: "Redirecting to Payment",
+              description: "Please wait while we redirect you to Flutterwave...",
+            });
+            
+            setTimeout(() => {
+              window.location.href = response.data.payment_url;
+            }, 1000);
+            return;
+          } else {
+            setIsLoading(false);
+            toast({
+              title: "Error",
+              description: response.message || "Failed to initialize payment",
+              variant: "destructive",
+            });
+            return;
+          }
+        } catch (error) {
+          setIsLoading(false);
+          toast({
+            title: "Error",
+            description: "Failed to initialize payment. Please try again.",
+            variant: "destructive",
+          });
+          return;
+        }
+      }
+      
+      // For other payment methods, use VTPass API
       const response = await vtpassApi.pay({
         serviceID: formData.serviceID,
         billersCode: formData.phone,
