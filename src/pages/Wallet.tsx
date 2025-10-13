@@ -49,14 +49,23 @@ const Wallet = () => {
         const response = await paymentApi.initializeFlutterwave({
           amount: parseFloat(amount),
           email: 'customer@superbills.org', // TODO: Get from user profile
-          name: 'Customer', // TODO: Get from user profile
+          name: 'SuperBills Customer', // TODO: Get from user profile
           phone: '08012345678' // TODO: Get from user profile
         });
 
         if (response.success && response.data?.payment_url) {
-          // Redirect to Flutterwave payment page
-          window.location.href = response.data.payment_url;
+          // Show loading message
+          toast({
+            title: "Redirecting to Payment",
+            description: "Please wait while we redirect you to Flutterwave...",
+          });
+          
+          // Small delay to show the toast, then redirect to Flutterwave payment page
+          setTimeout(() => {
+            window.location.href = response.data.payment_url;
+          }, 1000);
         } else {
+          setIsLoading(false);
           toast({
             title: "Error",
             description: response.message || "Failed to initialize payment",
@@ -117,7 +126,12 @@ const Wallet = () => {
                 <TrendingUp className="h-4 w-4 opacity-90" />
               </div>
               <div className="text-3xl font-bold mb-4">₦{balances.naira_balance.toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
-              <Button variant="secondary" size="sm" className="w-full">
+              <Button 
+                variant="secondary" 
+                size="sm" 
+                className="w-full"
+                onClick={() => setCurrency('Naira')}
+              >
                 <Plus className="h-4 w-4 mr-2" />
                 Fund Wallet
               </Button>
@@ -132,7 +146,12 @@ const Wallet = () => {
                 <TrendingUp className="h-4 w-4 opacity-90" />
               </div>
               <div className="text-3xl font-bold mb-4">{balances.espees_balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ESP</div>
-              <Button variant="secondary" size="sm" className="w-full">
+              <Button 
+                variant="secondary" 
+                size="sm" 
+                className="w-full"
+                onClick={() => setCurrency('Espees')}
+              >
                 <Plus className="h-4 w-4 mr-2" />
                 Fund Wallet
               </Button>
