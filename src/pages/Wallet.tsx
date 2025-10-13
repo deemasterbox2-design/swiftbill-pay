@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Wallet as WalletIcon, Plus, TrendingUp, ArrowUpRight, ArrowDownRight } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { walletApi } from "@/lib/api";
+import { walletApi, paymentApi } from "@/lib/api";
 
 const Wallet = () => {
   const { toast } = useToast();
@@ -44,24 +44,47 @@ const Wallet = () => {
 
     setIsLoading(true);
     try {
-      const response = await walletApi.fund({
-        currency,
-        amount: parseFloat(amount),
-        payment_method: paymentMethod,
-      });
+      // For Naira, use Flutterwave payment
+      if (currency === 'Naira') {
+        const response = await paymentApi.initializeFlutterwave({
+          amount: parseFloat(amount),
+          email: 'customer@superbills.org', // TODO: Get from user profile
+          name: 'Customer', // TODO: Get from user profile
+          phone: '08012345678' // TODO: Get from user profile
+        });
 
-      if (response.success) {
-        toast({
-          title: "Success",
-          description: `Wallet funded with ${currency === 'Naira' ? '₦' : ''}${amount}${currency === 'Espees' ? ' ESP' : ''}`,
-        });
-        setAmount('');
+        if (response.success && response.data?.payment_url) {
+          // Redirect to Flutterwave payment page
+          window.location.href = response.data.payment_url;
+        } else {
+          toast({
+            title: "Error",
+            description: response.message || "Failed to initialize payment",
+            variant: "destructive",
+          });
+        }
       } else {
-        toast({
-          title: "Error",
-          description: response.message || "Failed to fund wallet",
-          variant: "destructive",
+        // For Espees, use existing fund endpoint
+        const response = await walletApi.fund({
+          currency,
+          amount: parseFloat(amount),
+          payment_method: paymentMethod,
         });
+
+        if (response.success) {
+          toast({
+            title: "Success",
+            description: `Wallet funded with ${amount} ESP`,
+          });
+          setAmount('');
+          fetchBalances();
+        } else {
+          toast({
+            title: "Error",
+            description: response.message || "Failed to fund wallet",
+            variant: "destructive",
+          });
+        }
       }
     } catch (error) {
       toast({

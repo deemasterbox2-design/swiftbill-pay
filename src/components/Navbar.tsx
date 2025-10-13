@@ -30,17 +30,21 @@ export const Navbar = () => {
           </div>
 
           <div className="flex items-center gap-3">
-            <Button variant="ghost" size="sm" className="hidden md:flex items-center gap-2">
-              <Wallet className="h-4 w-4" />
-              <span className="text-sm">₦0.00</span>
+            <Button variant="ghost" size="sm" className="hidden md:flex items-center gap-2" asChild>
+              <Link to="/wallet">
+                <Wallet className="h-4 w-4" />
+                <span className="text-sm">₦0.00</span>
+              </Link>
             </Button>
             <Button variant="ghost" size="icon" asChild>
               <Link to="/auth">
                 <User className="h-5 w-5" />
               </Link>
             </Button>
-            <Button variant="ghost" size="icon" className="md:hidden">
-              <Menu className="h-5 w-5" />
+            <Button variant="ghost" size="icon" className="md:hidden" asChild>
+              <Link to="/services">
+                <Menu className="h-5 w-5" />
+              </Link>
             </Button>
           </div>
         </div>

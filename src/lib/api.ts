@@ -112,8 +112,11 @@ export const paymentApi = {
   initializeMonnify: (data: { amount: number; email: string; name: string; reference: string }) =>
     apiCall('/payment/monnify.php', 'POST', data),
   
-  initializeFlutterwave: (data: { amount: number; email: string; name: string; reference: string }) =>
-    apiCall('/payment/flutterwave.php', 'POST', data),
+  initializeFlutterwave: (data: { amount: number; email: string; name: string; phone?: string }) =>
+    apiCall('/payment/flutterwave-initiate.php', 'POST', data),
+  
+  verifyFlutterwave: (transactionId: string) =>
+    apiCall(`/payment/flutterwave-verify.php?transaction_id=${transactionId}`, 'GET'),
   
   initializePaystack: (data: { amount: number; email: string; reference: string }) =>
     apiCall('/payment/paystack.php', 'POST', data),

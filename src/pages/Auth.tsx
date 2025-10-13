@@ -33,8 +33,7 @@ const Auth = () => {
   };
 
   const handleGoogleLogin = () => {
-    // TODO: Implement Google OAuth
-    console.log("Google login");
+    alert("Google OAuth integration is coming soon! For now, please use email/password authentication.");
   };
 
   return (

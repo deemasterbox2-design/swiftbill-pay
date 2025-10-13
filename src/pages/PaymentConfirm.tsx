@@ -5,7 +5,7 @@ import { CheckCircle2, Download, Home, Receipt } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
-import { transactionApi } from "@/lib/api";
+import { transactionApi, paymentApi } from "@/lib/api";
 
 const PaymentConfirm = () => {
   const [searchParams] = useSearchParams();
@@ -17,6 +17,14 @@ const PaymentConfirm = () => {
   useEffect(() => {
     const requestId = searchParams.get('request_id');
     const reference = searchParams.get('reference');
+    const transactionId = searchParams.get('transaction_id');
+    const status = searchParams.get('status');
+    
+    // If this is a Flutterwave redirect with transaction_id, verify payment first
+    if (transactionId) {
+      verifyFlutterwavePayment(transactionId);
+      return;
+    }
     
     if (!requestId && !reference) {
       toast({
@@ -31,6 +39,40 @@ const PaymentConfirm = () => {
     // Fetch transaction details
     fetchTransactionDetails(requestId || reference);
   }, [searchParams]);
+
+  const verifyFlutterwavePayment = async (transactionId: string) => {
+    try {
+      const response = await paymentApi.verifyFlutterwave(transactionId);
+      
+      if (response.success) {
+        toast({
+          title: "Payment Verified",
+          description: `Your wallet has been credited with ₦${response.data?.amount}`,
+        });
+        // Redirect to wallet page after successful verification
+        setTimeout(() => {
+          navigate('/wallet');
+        }, 3000);
+      } else {
+        toast({
+          title: "Payment Failed",
+          description: response.message || "Payment verification failed",
+          variant: "destructive",
+        });
+        setTimeout(() => {
+          navigate('/wallet');
+        }, 3000);
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to verify payment",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const fetchTransactionDetails = async (ref: string) => {
     try {
