@@ -35,10 +35,20 @@ async function apiCall<T = any>(
     return data;
   } catch (error) {
     console.error('API Error:', error);
+    console.error('API Endpoint:', `${API_BASE_URL}${endpoint}`);
+    console.error('Request method:', method);
+    console.error('Request body:', body);
+    
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return {
       success: false,
-      message: 'Network error. Please check your connection.',
-      error,
+      message: `Network error: ${errorMessage}`,
+      error: {
+        message: errorMessage,
+        endpoint: `${API_BASE_URL}${endpoint}`,
+        method,
+        body
+      },
     };
   }
 }

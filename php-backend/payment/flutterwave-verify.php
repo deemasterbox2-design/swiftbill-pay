@@ -40,15 +40,24 @@ $error = curl_error($ch);
 curl_close($ch);
 
 if ($error) {
-    error_log("Flutterwave Verify cURL Error: $error");
+    error_log("=== FLUTTERWAVE VERIFY ERROR ===");
+    error_log("cURL Error: $error");
+    error_log("HTTP Code: $http_code");
+    error_log("Transaction ID: $transaction_id");
+    error_log("Verify URL: $url");
+    error_log("===============================");
     sendJsonResponse([
         'success' => false,
-        'message' => 'Payment verification failed'
+        'message' => 'Payment verification failed: ' . $error
     ], 500);
 }
 
 $data = json_decode($response, true);
-error_log("Flutterwave Verify Response: " . json_encode($data));
+error_log("=== FLUTTERWAVE VERIFY RESPONSE ===");
+error_log("HTTP Code: $http_code");
+error_log("Response: " . json_encode($data));
+error_log("Raw Response: " . $response);
+error_log("==================================");
 
 $db = Database::getInstance()->getConnection();
 

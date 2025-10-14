@@ -78,15 +78,24 @@ $error = curl_error($ch);
 curl_close($ch);
 
 if ($error) {
-    error_log("Flutterwave cURL Error: $error");
+    error_log("=== FLUTTERWAVE INITIATE ERROR ===");
+    error_log("cURL Error: $error");
+    error_log("HTTP Code: $http_code");
+    error_log("Request URL: $api_url");
+    error_log("Request Payload: " . json_encode($payload));
+    error_log("=================================");
     sendJsonResponse([
         'success' => false,
-        'message' => 'Payment gateway connection failed'
+        'message' => 'Payment gateway connection failed: ' . $error
     ], 500);
 }
 
 $response_data = json_decode($response, true);
-error_log("Flutterwave Initiate Response: " . json_encode($response_data));
+error_log("=== FLUTTERWAVE INITIATE RESPONSE ===");
+error_log("HTTP Code: $http_code");
+error_log("Response: " . json_encode($response_data));
+error_log("Raw Response: " . $response);
+error_log("====================================");
 
 if ($http_code === 200 && isset($response_data['status']) && $response_data['status'] === 'success') {
     $payment_url = $response_data['data']['link'];

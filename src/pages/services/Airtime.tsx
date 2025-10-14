@@ -85,18 +85,21 @@ const Airtime = () => {
             return;
           } else {
             setIsLoading(false);
+            console.error('Payment initialization failed:', response);
             toast({
-              title: "Error",
-              description: response.message || "Failed to initialize payment",
+              title: "Payment Error",
+              description: response.message || "Failed to initialize payment. Check console for details.",
               variant: "destructive",
             });
             return;
           }
         } catch (error) {
           setIsLoading(false);
+          console.error('Payment initialization error:', error);
+          const errorMsg = error instanceof Error ? error.message : 'Unknown error';
           toast({
-            title: "Error",
-            description: "Failed to initialize payment. Please try again.",
+            title: "Payment Failed",
+            description: `Error: ${errorMsg}. Check console for details.`,
             variant: "destructive",
           });
           return;
