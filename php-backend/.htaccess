@@ -6,7 +6,12 @@
     Header always set Access-Control-Max-Age "3600"
 </IfModule>
 
-# PHP files handle OPTIONS requests directly - no rewrite needed
+# Handle OPTIONS preflight without rewriting
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{REQUEST_METHOD} OPTIONS
+    RewriteRule ^(.*)$ $1 [L]
+</IfModule>
 
 # Enable error logging
 php_flag log_errors on
