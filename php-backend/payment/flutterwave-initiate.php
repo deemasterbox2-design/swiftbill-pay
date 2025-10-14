@@ -10,7 +10,19 @@ require_once __DIR__ . '/../includes/functions.php';
 
 setCorsHeaders();
 
+// Error logging function
+function logToFile($message) {
+    $logFile = __DIR__ . '/../lovable_error.txt';
+    $timestamp = date('Y-m-d H:i:s');
+    file_put_contents($logFile, "[$timestamp] $message\n", FILE_APPEND);
+}
+
+logToFile("=== FLUTTERWAVE INITIATE REQUEST ===");
+logToFile("Method: " . $_SERVER['REQUEST_METHOD']);
+logToFile("Raw Input: " . file_get_contents('php://input'));
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    logToFile("ERROR: Method not allowed - " . $_SERVER['REQUEST_METHOD']);
     sendJsonResponse(['success' => false, 'message' => 'Method not allowed'], 405);
 }
 
@@ -21,11 +33,15 @@ $name = sanitizeInput($input['name'] ?? 'Customer');
 $phone = sanitizeInput($input['phone'] ?? '');
 $userId = getCurrentUserId();
 
+logToFile("Parsed input - Amount: $amount, Email: $email, Name: $name, Phone: $phone, UserID: $userId");
+
 if ($amount < 100) {
+    logToFile("ERROR: Amount too low - $amount");
     sendJsonResponse(['success' => false, 'message' => 'Minimum amount is ₦100'], 400);
 }
 
 if (!$email) {
+    logToFile("ERROR: Email is missing");
     sendJsonResponse(['success' => false, 'message' => 'Email is required'], 400);
 }
 
@@ -78,6 +94,12 @@ $error = curl_error($ch);
 curl_close($ch);
 
 if ($error) {
+    logToFile("=== FLUTTERWAVE INITIATE ERROR ===");
+    logToFile("cURL Error: $error");
+    logToFile("HTTP Code: $http_code");
+    logToFile("Request URL: $api_url");
+    logToFile("Request Payload: " . json_encode($payload));
+    logToFile("=================================");
     error_log("=== FLUTTERWAVE INITIATE ERROR ===");
     error_log("cURL Error: $error");
     error_log("HTTP Code: $http_code");
@@ -91,6 +113,11 @@ if ($error) {
 }
 
 $response_data = json_decode($response, true);
+logToFile("=== FLUTTERWAVE INITIATE RESPONSE ===");
+logToFile("HTTP Code: $http_code");
+logToFile("Response: " . json_encode($response_data));
+logToFile("Raw Response: " . $response);
+logToFile("====================================");
 error_log("=== FLUTTERWAVE INITIATE RESPONSE ===");
 error_log("HTTP Code: $http_code");
 error_log("Response: " . json_encode($response_data));
@@ -121,6 +148,7 @@ if ($http_code === 200 && isset($response_data['status']) && $response_data['sta
         ]
     ]);
 } else {
+    logToFile("ERROR: Payment initiation failed - " . json_encode($response_data));
     sendJsonResponse([
         'success' => false,
         'message' => $response_data['message'] ?? 'Failed to initiate payment',

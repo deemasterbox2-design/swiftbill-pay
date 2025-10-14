@@ -10,13 +10,27 @@ require_once __DIR__ . '/../includes/functions.php';
 
 setCorsHeaders();
 
+// Error logging function
+function logToFile($message) {
+    $logFile = __DIR__ . '/../lovable_error.txt';
+    $timestamp = date('Y-m-d H:i:s');
+    file_put_contents($logFile, "[$timestamp] $message\n", FILE_APPEND);
+}
+
+logToFile("=== FLUTTERWAVE VERIFY REQUEST ===");
+logToFile("Method: " . $_SERVER['REQUEST_METHOD']);
+
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+    logToFile("ERROR: Method not allowed - " . $_SERVER['REQUEST_METHOD']);
     sendJsonResponse(['success' => false, 'message' => 'Method not allowed'], 405);
 }
 
 $transaction_id = sanitizeInput($_GET['transaction_id'] ?? '');
 
+logToFile("Transaction ID: $transaction_id");
+
 if (empty($transaction_id)) {
+    logToFile("ERROR: Transaction ID is missing");
     sendJsonResponse(['success' => false, 'message' => 'Transaction ID is required'], 400);
 }
 
@@ -40,6 +54,12 @@ $error = curl_error($ch);
 curl_close($ch);
 
 if ($error) {
+    logToFile("=== FLUTTERWAVE VERIFY ERROR ===");
+    logToFile("cURL Error: $error");
+    logToFile("HTTP Code: $http_code");
+    logToFile("Transaction ID: $transaction_id");
+    logToFile("Verify URL: $url");
+    logToFile("===============================");
     error_log("=== FLUTTERWAVE VERIFY ERROR ===");
     error_log("cURL Error: $error");
     error_log("HTTP Code: $http_code");
@@ -53,6 +73,11 @@ if ($error) {
 }
 
 $data = json_decode($response, true);
+logToFile("=== FLUTTERWAVE VERIFY RESPONSE ===");
+logToFile("HTTP Code: $http_code");
+logToFile("Response: " . json_encode($data));
+logToFile("Raw Response: " . $response);
+logToFile("==================================");
 error_log("=== FLUTTERWAVE VERIFY RESPONSE ===");
 error_log("HTTP Code: $http_code");
 error_log("Response: " . json_encode($data));
