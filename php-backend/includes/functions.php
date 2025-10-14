@@ -7,27 +7,10 @@
  * Set CORS headers for React frontend
  */
 function setCorsHeaders() {
-    // Get the origin of the request
-    $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
-    
-    // List of allowed origins
-    $allowed_origins = [
-        'https://superbills.lovable.app',
-        'https://5a5d2ef9-10ad-4d4a-b4cc-1a7f749a5f4a.lovableproject.com',
-        'http://localhost:5173', // for local development
-    ];
-    
-    // Check if the origin is in the allowed list or matches Lovable pattern
-    if (in_array($origin, $allowed_origins) || preg_match('/^https:\/\/.*\.lovableproject\.com$/', $origin)) {
-        header('Access-Control-Allow-Origin: ' . $origin);
-    } else {
-        // Fallback to APP_URL for backward compatibility
-        header('Access-Control-Allow-Origin: ' . APP_URL);
-    }
-    
+    // Allow all origins temporarily for debugging
+    header('Access-Control-Allow-Origin: *');
     header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
     header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
-    header('Access-Control-Allow-Credentials: true');
     header('Content-Type: application/json');
 
     // Handle preflight requests
