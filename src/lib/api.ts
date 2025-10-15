@@ -144,3 +144,8 @@ export const emailApi = {
     transaction_id: string;
   }) => apiCall('/email/send-token.php', 'POST', data),
 };
+
+// Auth API functions
+export const authApi = {
+  googleLogin: () => apiCall<{ authUrl: string }>('/auth/google-login.php', 'GET'),
+};

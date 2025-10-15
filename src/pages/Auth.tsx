@@ -34,11 +34,27 @@ const Auth = () => {
     }, 1000);
   };
 
-  const handleGoogleLogin = () => {
-    toast({
-      title: "Coming Soon",
-      description: "Google authentication will be available soon. Please use email/password for now.",
-    });
+  const handleGoogleLogin = async () => {
+    try {
+      const response = await fetch('https://smcgame.com/api/auth/google-login.php');
+      const data = await response.json();
+      
+      if (data.success && data.authUrl) {
+        window.location.href = data.authUrl;
+      } else {
+        toast({
+          title: "Error",
+          description: "Failed to initialize Google login",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to connect to authentication service",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
