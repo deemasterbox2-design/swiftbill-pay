@@ -1,3 +1,4 @@
+// File: WalletBalances.tsx | Path: src/components/WalletBalances.tsx
 import { Card } from "@/components/ui/card";
 import { Wallet as WalletIcon } from "lucide-react";
 import { useState, useEffect } from "react";

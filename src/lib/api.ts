@@ -1,3 +1,4 @@
+// File: api.ts | Path: src/lib/api.ts
 /**
  * API utility functions for connecting to PHP backend
  */

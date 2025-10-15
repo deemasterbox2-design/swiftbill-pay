@@ -1,3 +1,4 @@
+# File: .htaccess | Path: php-backend/.htaccess
 # CORS Configuration - Allow all origins temporarily for debugging
 <IfModule mod_headers.c>
     Header always set Access-Control-Allow-Origin "*"

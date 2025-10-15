@@ -1,4 +1,5 @@
 <?php
+// File: flutterwave-verify.php | Path: php-backend/payment/flutterwave-verify.php
 /**
  * Flutterwave Payment Verification
  * GET /payment/flutterwave-verify.php?transaction_id=xxx

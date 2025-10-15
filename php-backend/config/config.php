@@ -1,4 +1,5 @@
 <?php
+// File: config.php | Path: php-backend/config/config.php
 /**
  * SuperBills Backend Configuration
  */

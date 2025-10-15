@@ -1,3 +1,4 @@
+// File: Home.tsx | Path: src/pages/Home.tsx
 import { Navbar } from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
