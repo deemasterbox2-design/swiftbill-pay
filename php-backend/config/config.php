@@ -6,9 +6,9 @@
 
 // Database Configuration
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'superbills');
-define('DB_USER', 'root');
-define('DB_PASS', '');
+define('DB_NAME', 'supeqczx_superbills');
+define('DB_USER', 'supeqczx_prolificme');
+define('DB_PASS', 'prolificme2@');
 
 // VTpass API Configuration
 define('VTPASS_API_KEY', '31c54d45509642bab3124964d58f1969');
