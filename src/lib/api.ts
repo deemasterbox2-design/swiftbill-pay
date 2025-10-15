@@ -150,3 +150,8 @@ export const emailApi = {
 export const authApi = {
   googleLogin: () => apiCall<{ authUrl: string }>('/auth/google-login.php', 'GET'),
 };
+
+// Test API functions
+export const testApi = {
+  testCors: () => apiCall('/test-cors.php', 'POST', { test: 'data' }),
+};
