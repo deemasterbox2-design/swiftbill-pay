@@ -37,27 +37,45 @@ const Airtime = () => {
     setIsTesting(true);
     setTestResult(null);
     
+    const apiBaseUrl = import.meta.env.VITE_API_URL || 'https://smcgame.com/api';
+    
     try {
-      const result = await testApi.testCors();
-      setTestResult(result);
+      // Test 1: Try GET request (simple, no preflight)
+      console.log('🔍 Testing GET request to:', `${apiBaseUrl}/test-cors.php`);
+      const getResponse = await fetch(`${apiBaseUrl}/test-cors.php`, {
+        method: 'GET',
+        credentials: 'include',
+      });
       
-      if (result.success) {
-        toast({
-          title: "Connection Successful! ✅",
-          description: "React app is connecting to PHP backend correctly",
-        });
-      } else {
-        toast({
-          title: "Connection Failed ❌",
-          description: result.message || "Could not connect to PHP backend",
-          variant: "destructive",
-        });
-      }
+      const getData = await getResponse.json();
+      console.log('✅ GET request successful:', getData);
+      
+      // Test 2: Try POST request (triggers preflight)
+      console.log('🔍 Testing POST request to:', `${apiBaseUrl}/test-cors.php`);
+      const result = await testApi.testCors();
+      console.log('✅ POST request successful:', result);
+      
+      setTestResult({
+        success: true,
+        message: "Both GET and POST requests successful!",
+        getTest: getData,
+        postTest: result,
+        apiBaseUrl
+      });
+      
+      toast({
+        title: "Connection Successful! ✅",
+        description: "React app is connecting to PHP backend correctly",
+      });
     } catch (error) {
+      console.error('❌ Connection test failed:', error);
+      
       const errorResult = {
         success: false,
         error: error instanceof Error ? error.message : String(error),
-        apiBaseUrl: import.meta.env.VITE_API_URL || 'https://smcgame.com/api'
+        apiBaseUrl,
+        origin: window.location.origin,
+        diagnosis: "CORS preflight likely failing. The server needs to handle OPTIONS requests with proper CORS headers."
       };
       setTestResult(errorResult);
       
