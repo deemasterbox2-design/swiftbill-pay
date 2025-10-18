@@ -4,11 +4,12 @@
  * GET/POST /test-cors.php
  */
 
-// Include CORS handler FIRST - before any other code
-require_once __DIR__ . '/cors.php';
+// Include dependencies
+require_once __DIR__ . '/config/config.php';
+require_once __DIR__ . '/includes/functions.php';
 
-// Now set content type
-header('Content-Type: application/json; charset=utf-8');
+// Use centralized CORS handler
+setCorsHeaders();
 
 // Test response
 $response = [
@@ -18,12 +19,7 @@ $response = [
         'request_method' => $_SERVER['REQUEST_METHOD'],
         'origin' => $_SERVER['HTTP_ORIGIN'] ?? 'No origin header',
         'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? 'No user agent',
-        'timestamp' => date('Y-m-d H:i:s'),
-        'headers_sent' => [
-            'Access-Control-Allow-Origin' => '*',
-            'Access-Control-Allow-Methods' => 'GET, POST, OPTIONS',
-            'Content-Type' => 'application/json'
-        ]
+        'timestamp' => date('Y-m-d H:i:s')
     ]
 ];
 
