@@ -4,7 +4,7 @@
  * API utility functions for connecting to PHP backend
  */
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://smcgame.com/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://smcgame.com/api/php-backend';
 
 interface ApiResponse<T = any> {
   success: boolean;

@@ -25,7 +25,7 @@ define('ESPEES_MERCHANT_WALLET', '0xf7c609f4a25244f7847cb4f7049e88e89424de8d');
 
 // App Configuration
 define('APP_URL', 'https://superbills.lovable.app'); // Your React app URL
-define('API_URL', 'https://smcgame.com/api'); // This API URL
+define('API_URL', 'https://smcgame.com/api/php-backend'); // This API URL
 define('TIMEZONE', 'Africa/Lagos');
 
 // Session Configuration
