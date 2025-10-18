@@ -1,4 +1,6 @@
 <?php
+// File: google-callback.php | Path: php-backend/auth/google-callback.php
+// Function: Handle Google OAuth callback, exchange code for token, and create/login user
 require_once '../config/config.php';
 require_once '../config/database.php';
 require_once '../includes/functions.php';

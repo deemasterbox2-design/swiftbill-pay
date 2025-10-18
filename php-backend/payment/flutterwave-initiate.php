@@ -1,4 +1,6 @@
 <?php
+// File: flutterwave-initiate.php | Path: php-backend/payment/flutterwave-initiate.php
+// Function: Initialize Flutterwave payment and generate payment URL
 /**
  * Flutterwave Payment Initiation
  * POST /payment/flutterwave-initiate.php

@@ -1,4 +1,6 @@
 <?php
+// File: functions.php | Path: php-backend/includes/functions.php
+// Function: Shared utility functions for CORS, API requests, validation, and transactions
 /**
  * Shared Utility Functions
  */

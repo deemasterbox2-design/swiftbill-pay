@@ -1,3 +1,5 @@
+// File: PaymentConfirm.tsx | Path: src/pages/PaymentConfirm.tsx
+// Function: Payment confirmation page showing transaction details and success/failure status
 import { Navbar } from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";

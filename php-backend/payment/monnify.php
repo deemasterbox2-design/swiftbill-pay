@@ -1,4 +1,6 @@
 <?php
+// File: monnify.php | Path: php-backend/payment/monnify.php
+// Function: Monnify payment gateway integration
 /**
  * Monnify Payment Gateway Integration
  * POST /payment/monnify.php

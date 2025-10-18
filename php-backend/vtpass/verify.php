@@ -1,4 +1,6 @@
 <?php
+// File: verify.php | Path: php-backend/vtpass/verify.php
+// Function: Verify customer details (meter number, smartcard, etc.) before payment
 /**
  * Verify Customer Details (Meter, Smartcard, etc.)
  * POST /vtpass/verify.php

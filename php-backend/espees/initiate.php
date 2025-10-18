@@ -1,4 +1,6 @@
 <?php
+// File: initiate.php | Path: php-backend/espees/initiate.php
+// Function: Initiate Espees cryptocurrency payment and generate payment URL
 /**
  * Initiate Espees Payment
  * POST /espees/initiate.php

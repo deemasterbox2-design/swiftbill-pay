@@ -1,4 +1,5 @@
 // File: Airtime.tsx | Path: src/pages/services/Airtime.tsx
+// Function: Airtime recharge service page with network selection and payment processing
 import { Navbar } from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";

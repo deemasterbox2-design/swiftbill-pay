@@ -1,4 +1,6 @@
 <?php
+// File: export.php | Path: php-backend/transactions/export.php
+// Function: Export user's transaction history to CSV file for download
 /**
  * Export Transactions to CSV
  * GET /transactions/export.php

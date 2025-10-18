@@ -1,4 +1,6 @@
 <?php
+// File: database.php | Path: php-backend/config/database.php
+// Function: Singleton database connection handler using PDO
 /**
  * Database Connection Handler
  */

@@ -1,4 +1,6 @@
 <?php
+// File: verify.php | Path: php-backend/espees/verify.php
+// Function: Verify Espees payment completion and update transaction status
 /**
  * Verify Espees Payment (Callback endpoint)
  * GET/POST /espees/verify.php?invoice_id={id}&tab_instance={instance}

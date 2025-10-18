@@ -1,4 +1,6 @@
 <?php
+// File: variations.php | Path: php-backend/vtpass/variations.php
+// Function: Get VTpass service variations and pricing plans by service ID
 /**
  * Get VTpass Service Variations (Plans)
  * GET /vtpass/variations.php?serviceID={id}

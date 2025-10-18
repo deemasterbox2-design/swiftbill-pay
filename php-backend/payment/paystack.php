@@ -1,4 +1,6 @@
 <?php
+// File: paystack.php | Path: php-backend/payment/paystack.php
+// Function: Paystack payment gateway integration
 /**
  * Paystack Payment Gateway Integration
  * POST /payment/paystack.php

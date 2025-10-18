@@ -1,4 +1,5 @@
 // File: TV.tsx | Path: src/pages/services/TV.tsx
+// Function: TV subscription service page with smartcard verification, package selection, and renewal
 import { Navbar } from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";

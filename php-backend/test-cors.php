@@ -1,4 +1,6 @@
 <?php
+// File: test-cors.php | Path: php-backend/test-cors.php
+// Function: CORS testing endpoint for debugging frontend-backend connectivity
 /**
  * CORS Test Endpoint
  * GET/POST /test-cors.php

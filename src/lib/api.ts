@@ -1,4 +1,5 @@
 // File: api.ts | Path: src/lib/api.ts
+// Function: API utility functions and wrappers for PHP backend communication
 /**
  * API utility functions for connecting to PHP backend
  */

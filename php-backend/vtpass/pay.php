@@ -1,4 +1,6 @@
 <?php
+// File: pay.php | Path: php-backend/vtpass/pay.php
+// Function: VTpass payment execution for airtime, data, TV, and electricity services
 /**
  * Execute VTpass Payment
  * POST /vtpass/pay.php

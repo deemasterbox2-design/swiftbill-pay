@@ -1,4 +1,6 @@
 <?php
+// File: requery.php | Path: php-backend/vtpass/requery.php
+// Function: Requery VTpass transaction status and update database
 /**
  * Requery Transaction Status
  * POST /vtpass/requery.php

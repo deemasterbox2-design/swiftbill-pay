@@ -1,4 +1,5 @@
 // File: Services.tsx | Path: src/pages/Services.tsx
+// Function: Services selection page displaying all available bill payment services
 import { Navbar } from "@/components/Navbar";
 import { Card } from "@/components/ui/card";
 import { Link } from "react-router-dom";

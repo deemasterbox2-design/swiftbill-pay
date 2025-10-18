@@ -1,4 +1,6 @@
 <?php
+// File: suggestions.php | Path: php-backend/user/suggestions.php
+// Function: Get user's frequently used phone numbers, emails, meters, smartcards for autocomplete
 /**
  * Get User Detail Suggestions
  * GET /user/suggestions.php?type=phone|email|meter|smartcard|decoder

@@ -1,4 +1,6 @@
 <?php
+// File: flutterwave.php | Path: php-backend/payment/flutterwave.php
+// Function: Flutterwave payment gateway integration for general payments
 /**
  * Flutterwave Payment Gateway Integration
  * POST /payment/flutterwave.php

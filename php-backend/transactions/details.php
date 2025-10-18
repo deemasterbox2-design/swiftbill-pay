@@ -1,4 +1,6 @@
 <?php
+// File: details.php | Path: php-backend/transactions/details.php
+// Function: Get detailed information for a specific transaction by request ID
 /**
  * Get Transaction Details
  * GET /transactions/details.php?request_id=xxx

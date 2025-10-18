@@ -1,3 +1,5 @@
+// File: Electricity.tsx | Path: src/pages/services/Electricity.tsx
+// Function: Electricity bill payment page with meter verification and token generation
 import { Navbar } from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";

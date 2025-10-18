@@ -1,4 +1,6 @@
 <?php
+// File: cors.php | Path: php-backend/cors.php
+// Function: Centralized CORS header handler for all API requests
 /**
  * CORS Handler - Must be included FIRST in all API files
  * This ensures CORS headers are sent before any other processing

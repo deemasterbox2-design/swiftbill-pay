@@ -1,4 +1,6 @@
 <?php
+// File: google-login.php | Path: php-backend/auth/google-login.php
+// Function: Initialize Google OAuth login and generate authorization URL
 require_once '../config/config.php';
 require_once '../config/database.php';
 require_once '../includes/functions.php';

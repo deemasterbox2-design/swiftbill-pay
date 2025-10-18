@@ -1,4 +1,6 @@
 <?php
+// File: send-token.php | Path: php-backend/email/send-token.php
+// Function: Send electricity token to customer email via Brevo email service
 /**
  * Send Electricity Token via Brevo Email
  * POST /email/send-token.php

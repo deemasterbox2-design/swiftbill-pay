@@ -1,4 +1,6 @@
 <?php
+// File: balance.php | Path: php-backend/wallet/balance.php
+// Function: Get user's wallet balance for Naira and Espees currencies
 /**
  * Get Wallet Balance
  * GET /wallet/balance.php

@@ -1,4 +1,5 @@
 // File: Auth.tsx | Path: src/pages/Auth.tsx
+// Function: Authentication page with login, signup, and Google OAuth forms
 import { Navbar } from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";

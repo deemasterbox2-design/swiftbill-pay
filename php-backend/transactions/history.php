@@ -1,4 +1,6 @@
 <?php
+// File: history.php | Path: php-backend/transactions/history.php
+// Function: Get user's transaction history with optional filtering by status and date range
 /**
  * Get Transaction History
  * GET /transactions/history.php?status=success&dateRange=7days

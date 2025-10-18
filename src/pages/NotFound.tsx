@@ -1,3 +1,5 @@
+// File: NotFound.tsx | Path: src/pages/NotFound.tsx
+// Function: 404 error page for non-existent routes
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
 

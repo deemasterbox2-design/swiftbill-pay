@@ -1,4 +1,6 @@
 <?php
+// File: receipt.php | Path: php-backend/transactions/receipt.php
+// Function: Generate HTML receipt for a transaction with optional electricity token
 /**
  * Generate Transaction Receipt (PDF)
  * GET /transactions/receipt.php?request_id=xxx

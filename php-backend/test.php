@@ -1,4 +1,6 @@
 <?php
+// File: test.php | Path: php-backend/test.php
+// Function: Simple test endpoint to verify server connectivity and CORS configuration
 /**
  * Simple test endpoint to verify server connectivity and CORS
  */

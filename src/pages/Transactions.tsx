@@ -1,4 +1,5 @@
 // File: Transactions.tsx | Path: src/pages/Transactions.tsx
+// Function: Transaction history page with filtering and CSV export functionality
 import { Navbar } from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";

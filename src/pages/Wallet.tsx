@@ -1,3 +1,5 @@
+// File: Wallet.tsx | Path: src/pages/Wallet.tsx
+// Function: Wallet management page for funding and viewing Naira/Espees balances
 import { Navbar } from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";

@@ -1,4 +1,6 @@
 <?php
+// File: services.php | Path: php-backend/vtpass/services.php
+// Function: Get VTpass services filtered by category identifier
 /**
  * Get VTpass Services by Category
  * GET /vtpass/services.php?identifier={category}

@@ -1,4 +1,5 @@
 // File: WalletBalances.tsx | Path: src/components/WalletBalances.tsx
+// Function: Component displaying user's Naira and Espees wallet balances
 import { Card } from "@/components/ui/card";
 import { Wallet as WalletIcon } from "lucide-react";
 import { useState, useEffect } from "react";

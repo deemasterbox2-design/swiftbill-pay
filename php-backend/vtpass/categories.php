@@ -1,4 +1,6 @@
 <?php
+// File: categories.php | Path: php-backend/vtpass/categories.php
+// Function: Fetch VTpass service categories
 /**
  * Get VTpass Service Categories
  * GET /vtpass/categories.php

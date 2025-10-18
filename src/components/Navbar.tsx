@@ -1,4 +1,5 @@
 // File: Navbar.tsx | Path: src/components/Navbar.tsx
+// Function: Main navigation bar component with links to services, wallet, and auth
 import { Button } from "@/components/ui/button";
 import { Wallet, User, Menu, Zap } from "lucide-react";
 import { Link } from "react-router-dom";

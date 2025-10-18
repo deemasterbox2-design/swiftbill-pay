@@ -1,4 +1,5 @@
 // File: Home.tsx | Path: src/pages/Home.tsx
+// Function: Main landing page with hero section, features, and service links
 import { Navbar } from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";

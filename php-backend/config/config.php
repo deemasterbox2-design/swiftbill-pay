@@ -1,5 +1,6 @@
 <?php
 // File: config.php | Path: php-backend/config/config.php
+// Function: Backend configuration for database, APIs (VTpass, Espees), and app settings
 /**
  * SuperBills Backend Configuration
  */

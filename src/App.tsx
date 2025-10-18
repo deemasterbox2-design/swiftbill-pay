@@ -1,4 +1,5 @@
 // File: App.tsx | Path: src/App.tsx
+// Function: Main application component with routing configuration
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
