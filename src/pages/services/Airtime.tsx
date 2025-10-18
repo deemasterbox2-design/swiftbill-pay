@@ -7,8 +7,8 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Smartphone, Loader2, CheckCircle2, XCircle } from "lucide-react";
-import { vtpassApi, paymentApi } from "@/lib/api";
+import { Smartphone, Loader2, CheckCircle2, XCircle, TestTube } from "lucide-react";
+import { vtpassApi, paymentApi, testApi } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
 import { WalletBalances } from "@/components/WalletBalances";
 
@@ -26,10 +26,50 @@ const Airtime = () => {
     paymentMethod: "naira",
     walletCurrency: "Naira" as "Naira" | "Espees",
   });
+  const [testResult, setTestResult] = useState<any>(null);
+  const [isTesting, setIsTesting] = useState(false);
 
   useEffect(() => {
     loadNetworks();
   }, []);
+
+  const testConnection = async () => {
+    setIsTesting(true);
+    setTestResult(null);
+    
+    try {
+      const result = await testApi.testCors();
+      setTestResult(result);
+      
+      if (result.success) {
+        toast({
+          title: "Connection Successful! ✅",
+          description: "React app is connecting to PHP backend correctly",
+        });
+      } else {
+        toast({
+          title: "Connection Failed ❌",
+          description: result.message || "Could not connect to PHP backend",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      const errorResult = {
+        success: false,
+        error: error instanceof Error ? error.message : String(error),
+        apiBaseUrl: import.meta.env.VITE_API_URL || 'https://smcgame.com/api'
+      };
+      setTestResult(errorResult);
+      
+      toast({
+        title: "Connection Test Failed ❌",
+        description: "Check the test results below for details",
+        variant: "destructive",
+      });
+    } finally {
+      setIsTesting(false);
+    }
+  };
 
   const loadNetworks = async () => {
     const response = await vtpassApi.getServices("airtime");
@@ -150,6 +190,58 @@ const Airtime = () => {
           </div>
 
           <WalletBalances />
+
+          <Card className="p-4 mb-6 bg-blue-50 dark:bg-blue-950/30 border-blue-200 dark:border-blue-900">
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <TestTube className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                <div>
+                  <h3 className="font-semibold text-sm text-blue-900 dark:text-blue-100">
+                    Connection Test
+                  </h3>
+                  <p className="text-xs text-blue-700 dark:text-blue-300">
+                    Test React → PHP Backend
+                  </p>
+                </div>
+              </div>
+              <Button 
+                onClick={testConnection} 
+                disabled={isTesting}
+                size="sm"
+                variant="outline"
+                className="border-blue-300 dark:border-blue-700"
+              >
+                {isTesting ? (
+                  <>
+                    <Loader2 className="mr-2 h-3 w-3 animate-spin" />
+                    Testing...
+                  </>
+                ) : (
+                  "Test Now"
+                )}
+              </Button>
+            </div>
+            
+            {testResult && (
+              <div className="mt-4 p-3 bg-white dark:bg-gray-900 rounded border border-blue-200 dark:border-blue-800">
+                <div className="flex items-start gap-2 mb-2">
+                  {testResult.success ? (
+                    <CheckCircle2 className="h-4 w-4 text-green-600 mt-0.5" />
+                  ) : (
+                    <XCircle className="h-4 w-4 text-red-600 mt-0.5" />
+                  )}
+                  <div className="flex-1">
+                    <p className="text-xs font-semibold mb-1">
+                      {testResult.success ? "✅ Connection Working" : "❌ Connection Failed"}
+                    </p>
+                    <pre className="text-[10px] bg-gray-100 dark:bg-gray-800 p-2 rounded overflow-x-auto">
+                      {JSON.stringify(testResult, null, 2)}
+                    </pre>
+                  </div>
+                </div>
+              </div>
+            )}
+          </Card>
 
           {step === 1 && (
             <Card className="p-6">
