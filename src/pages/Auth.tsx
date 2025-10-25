@@ -61,6 +61,9 @@ const Auth = () => {
 
   return (
     <div className="min-h-screen bg-gradient-hero">
+      <div className="bg-muted/50 text-xs text-muted-foreground text-center py-1 px-2 sticky top-0 z-50">
+        File: src/pages/Auth.tsx
+      </div>
       <Navbar />
       
       <main className="container mx-auto px-4 py-12">

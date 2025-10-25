@@ -18,6 +18,9 @@ import {
 const Home = () => {
   return (
     <div className="min-h-screen">
+      <div className="bg-muted/50 text-xs text-muted-foreground text-center py-1 px-2 sticky top-0 z-50">
+        File: src/pages/Home.tsx
+      </div>
       <Navbar />
 
       {/* Hero Section */}

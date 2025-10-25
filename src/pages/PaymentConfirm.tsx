@@ -133,6 +133,9 @@ const PaymentConfirm = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-hero">
+        <div className="bg-muted/50 text-xs text-muted-foreground text-center py-1 px-2 sticky top-0 z-50">
+          File: src/pages/PaymentConfirm.tsx
+        </div>
         <Navbar />
         <main className="container mx-auto px-4 py-12">
           <div className="max-w-2xl mx-auto text-center">
@@ -145,6 +148,9 @@ const PaymentConfirm = () => {
 
   return (
     <div className="min-h-screen bg-gradient-hero">
+      <div className="bg-muted/50 text-xs text-muted-foreground text-center py-1 px-2 sticky top-0 z-50">
+        File: src/pages/PaymentConfirm.tsx
+      </div>
       <Navbar />
       
       <main className="container mx-auto px-4 py-12">

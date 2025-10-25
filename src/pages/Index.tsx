@@ -10,7 +10,11 @@ const Index = () => {
     navigate("/home");
   }, [navigate]);
 
-  return null;
+  return (
+    <div className="bg-muted/50 text-xs text-muted-foreground text-center py-1 px-2">
+      File: src/pages/Index.tsx
+    </div>
+  );
 };
 
 export default Index;
